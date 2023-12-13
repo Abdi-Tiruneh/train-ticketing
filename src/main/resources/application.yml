@@ -19,16 +19,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop  #(create, create-drop, validate, update)
+      ddl-auto: update  #(create, create-drop, validate, update)
     show-sql: true
 
 server:
-  port: 8123
+  port: 8125
 
 #conditional property for seeding the database
 # NOTE: Set it to true only if you are starting this app for the first time.
 database:
-  seed: true
+  seed: false
 
 # Secret key for jwt
 JWT_SECRET_KEY:
