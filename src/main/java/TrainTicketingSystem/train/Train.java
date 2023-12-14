@@ -37,20 +37,23 @@ public class Train {
     private int seatingCapacity;
 
     @Column(nullable = false)
+    private double fairPerSeat;
+
+    @Column(nullable = false)
     private String departureStation;
 
     @Column(nullable = false)
     private String arrivalStation;
 
+    @Column
+    private LocalDateTime departureTime;
+
     @CreationTimestamp
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted")
     @JsonIgnore
     private boolean deleted;
 

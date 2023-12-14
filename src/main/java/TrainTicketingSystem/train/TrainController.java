@@ -1,5 +1,7 @@
 package TrainTicketingSystem.train;
 
+import TrainTicketingSystem.train.dto.TrainScheduleReq;
+import TrainTicketingSystem.train.dto.TrainReq;
 import TrainTicketingSystem.utils.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -39,6 +41,11 @@ public class TrainController {
     @PutMapping("/{id}")
     public ResponseEntity<Train> updateTrain(@PathVariable Long id, @RequestBody TrainReq trainReq) {
         return ResponseEntity.ok(trainService.updateTrain(id, trainReq));
+    }
+
+    @PutMapping("/schedule/{id}")
+    public ResponseEntity<Train> scheduleTrain(@PathVariable Long id, @RequestBody @Valid TrainScheduleReq trainScheduleReq) {
+        return ResponseEntity.ok(trainService.scheduleTrain(id, trainScheduleReq));
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,7 @@
 package TrainTicketingSystem.train;
 
+import TrainTicketingSystem.train.dto.TrainScheduleReq;
+import TrainTicketingSystem.train.dto.TrainReq;
 import TrainTicketingSystem.utils.CurrentlyLoggedInUser;
 import TrainTicketingSystem.utils.RoleChecker;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -30,6 +34,7 @@ public class TrainService {
         train.setTrainNumber(trainReq.getTrainNumber());
         train.setTotalCoach(trainReq.getTotalCoach());
         train.setSeatingCapacity(trainReq.getSeatingCapacity());
+        train.setFairPerSeat(trainReq.getFairPerSeat());
         train.setDepartureStation(trainReq.getDepartureStation());
         train.setArrivalStation(trainReq.getArrivalStation());
 
@@ -48,6 +53,9 @@ public class TrainService {
         if (trainReq.getTrainNumber() != null)
             train.setTrainNumber(trainReq.getTrainNumber().trim());
 
+        if (trainReq.getFairPerSeat() != null)
+            train.setFairPerSeat(trainReq.getFairPerSeat());
+
         if (trainReq.getTotalCoach() != null)
             train.setTotalCoach(trainReq.getTotalCoach());
 
@@ -60,6 +68,31 @@ public class TrainService {
         if (trainReq.getArrivalStation() != null)
             train.setArrivalStation(trainReq.getArrivalStation().trim());
 
+        return trainRepository.save(train);
+    }
+
+
+    @Transactional
+    public Train scheduleTrain(Long id, TrainScheduleReq trainScheduleReq) {
+        RoleChecker.validateAdminUser(inUser.getUser());
+
+        Train train = getTrainById(id);
+
+        if (train.getDepartureTime() != null) {
+            String errorMessage = String.format(
+                    "Train is already scheduled for departure at %s from %s to %s",
+                    train.getDepartureTime(),
+                    train.getDepartureStation(),
+                    train.getArrivalStation()
+            );
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        String dateTimeString = trainScheduleReq.getDepartureTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+
+        train.setDepartureTime(dateTime.withSecond(0));
         return trainRepository.save(train);
     }
 
