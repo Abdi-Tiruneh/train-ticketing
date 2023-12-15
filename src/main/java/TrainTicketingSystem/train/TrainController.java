@@ -43,7 +43,7 @@ public class TrainController {
         return ResponseEntity.ok(trainService.updateTrain(id, trainReq));
     }
 
-    @PutMapping("/schedule/{id}")
+    @PutMapping("/{id}/schedule")
     public ResponseEntity<Train> scheduleTrain(@PathVariable Long id, @RequestBody @Valid TrainScheduleReq trainScheduleReq) {
         return ResponseEntity.ok(trainService.scheduleTrain(id, trainScheduleReq));
     }

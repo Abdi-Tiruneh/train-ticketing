@@ -29,11 +29,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse register(UserRegistrationReq userReq, String roleName) {
+    public UserResponse register(UserRegistrationReq userReq) {
         if (userRepository.findByUsername(userReq.getUsername()).isPresent())
             throw new ResourceAlreadyExistsException("Username is already taken");
 
-        Role role = roleService.getRoleByRoleName(roleName);
+        Role role = roleService.getRoleByRoleName("USER");
 
         Users user = Users.builder()
                 .username(userReq.getUsername())

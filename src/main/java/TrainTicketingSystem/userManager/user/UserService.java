@@ -7,7 +7,7 @@ import TrainTicketingSystem.userManager.user.dto.UserUpdateReq;
 import java.util.List;
 
 public interface UserService {
-    UserResponse register(UserRegistrationReq userReq, String roleName);
+    UserResponse register(UserRegistrationReq userReq);
 
     UserResponse me();
 

@@ -38,18 +38,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRegistrationReq userReq) {
-        UserResponse user = userService.register(userReq, "USER");
+        UserResponse user = userService.register(userReq);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
-
-    @PostMapping("/manager")
-    public ResponseEntity<UserResponse> registerManager(@RequestBody @Valid UserRegistrationReq userReq) {
-        Users user = loggedInUser.getUser();
-        if (!user.getRole().getRoleName().equalsIgnoreCase("ADMIN"))
-            throw new ForbiddenException("Access Denied: Only administrators are authorized to create managers.");
-
-        UserResponse response = userService.register(userReq, "MANAGER");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping
