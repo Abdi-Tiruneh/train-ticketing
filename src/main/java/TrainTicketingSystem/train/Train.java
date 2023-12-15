@@ -34,7 +34,7 @@ public class Train {
     private int totalCoach;
 
     @Column(nullable = false)
-    private int seatingCapacity;
+    private int seatingCapacityPerCouch;
 
     @Column(nullable = false)
     private double fairPerSeat;
@@ -45,7 +45,7 @@ public class Train {
     @Column(nullable = false)
     private String arrivalStation;
 
-    private LocalDateTime departureTime;
+    private String departureTime;
 
     private boolean scheduled;
 

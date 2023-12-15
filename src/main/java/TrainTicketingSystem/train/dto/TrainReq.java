@@ -1,6 +1,5 @@
 package TrainTicketingSystem.train.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class TrainReq {
     private Integer totalCoach;
 
     @NotNull
-    private Integer seatingCapacity;
+    private Integer seatingCapacityPerCouch;
 
     @NotNull
     private Double fairPerSeat;

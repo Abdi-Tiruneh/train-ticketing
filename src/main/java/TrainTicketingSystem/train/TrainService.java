@@ -1,7 +1,8 @@
 package TrainTicketingSystem.train;
 
-import TrainTicketingSystem.train.dto.TrainScheduleReq;
+import TrainTicketingSystem.ticket.TicketService;
 import TrainTicketingSystem.train.dto.TrainReq;
+import TrainTicketingSystem.train.dto.TrainScheduleReq;
 import TrainTicketingSystem.utils.CurrentlyLoggedInUser;
 import TrainTicketingSystem.utils.RoleChecker;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,8 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -18,10 +17,12 @@ public class TrainService {
 
     private final TrainRepository trainRepository;
     private final CurrentlyLoggedInUser inUser;
+    private final TicketService ticketService;
 
-    public TrainService(TrainRepository trainRepository, CurrentlyLoggedInUser inUser) {
+    public TrainService(TrainRepository trainRepository, CurrentlyLoggedInUser inUser, TicketService ticketService) {
         this.trainRepository = trainRepository;
         this.inUser = inUser;
+        this.ticketService = ticketService;
     }
 
 
@@ -33,7 +34,7 @@ public class TrainService {
         train.setTrainName(trainReq.getTrainName());
         train.setTrainNumber(trainReq.getTrainNumber());
         train.setTotalCoach(trainReq.getTotalCoach());
-        train.setSeatingCapacity(trainReq.getSeatingCapacity());
+        train.setSeatingCapacityPerCouch(trainReq.getSeatingCapacityPerCouch());
         train.setFairPerSeat(trainReq.getFairPerSeat());
         train.setDepartureStation(trainReq.getDepartureStation());
         train.setArrivalStation(trainReq.getArrivalStation());
@@ -59,8 +60,8 @@ public class TrainService {
         if (trainReq.getTotalCoach() != null)
             train.setTotalCoach(trainReq.getTotalCoach());
 
-        if (trainReq.getSeatingCapacity() != null)
-            train.setSeatingCapacity(trainReq.getSeatingCapacity());
+        if (trainReq.getSeatingCapacityPerCouch() != null)
+            train.setSeatingCapacityPerCouch(trainReq.getSeatingCapacityPerCouch());
 
         if (trainReq.getDepartureStation() != null)
             train.setDepartureStation(trainReq.getDepartureStation().trim());
@@ -88,16 +89,14 @@ public class TrainService {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        String dateTimeString = trainScheduleReq.getDepartureTime();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
-
-        train.setDepartureTime(dateTime.withSecond(0));
+        train.setDepartureTime(trainScheduleReq.getDepartureTime());
         train.setScheduled(true);
-        return trainRepository.save(train);
+        train = trainRepository.save(train);
+
+        ticketService.generateTickets(train);
+
+        return train;
     }
-
-
 
 
     @Transactional(readOnly = true)
