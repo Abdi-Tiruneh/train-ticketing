@@ -11,7 +11,7 @@ public interface TrainRepository extends JpaRepository<Train, Long> {
     List<Train> findAllByTrainNameContainingIgnoreCase(String name, Sort sort);
 
     List<Train> findAllByArrivalStationContainingIgnoreCase(String arrivalStation, Sort sort);
-
+    List<Train> findAllByScheduledTrue(Sort sort);
     List<Train> findAllByDepartureStationContainingIgnoreCase(String departureStation, Sort sort);
 
 }

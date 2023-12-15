@@ -45,8 +45,9 @@ public class Train {
     @Column(nullable = false)
     private String arrivalStation;
 
-    @Column
     private LocalDateTime departureTime;
+
+    private boolean scheduled;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

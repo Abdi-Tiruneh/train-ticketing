@@ -32,6 +32,11 @@ public class TrainController {
         return ResponseEntity.ok(trainService.getTrainsByStation(stationName,station));
     }
 
+    @GetMapping("/scheduled")
+    public ResponseEntity<List<Train>> getTrainsByStation() {
+        return ResponseEntity.ok(trainService.getScheduledTrains());
+    }
+
     @PostMapping
     public ResponseEntity<Train> createTrain(@RequestBody @Valid TrainReq trainReq) {
         Train response = trainService.createTrain(trainReq);

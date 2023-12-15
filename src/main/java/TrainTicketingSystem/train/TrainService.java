@@ -78,7 +78,7 @@ public class TrainService {
 
         Train train = getTrainById(id);
 
-        if (train.getDepartureTime() != null) {
+        if (train.isScheduled()) {
             String errorMessage = String.format(
                     "Train is already scheduled for departure at %s from %s to %s",
                     train.getDepartureTime(),
@@ -93,8 +93,11 @@ public class TrainService {
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
 
         train.setDepartureTime(dateTime.withSecond(0));
+        train.setScheduled(true);
         return trainRepository.save(train);
     }
+
+
 
 
     @Transactional(readOnly = true)
@@ -114,6 +117,12 @@ public class TrainService {
         return trainRepository.findAll(sort);
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Train> getScheduledTrains() {
+        Sort sort = Sort.by(Sort.Order.asc("trainName"));
+        return trainRepository.findAllByScheduledTrue(sort);
+    }
 
     //station = 0 => departure
     //station = 1 => arrival
